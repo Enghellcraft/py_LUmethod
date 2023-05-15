@@ -332,5 +332,6 @@ print("         Como exede lo pedido por el TP ha quedado comentado pero es func
 print("                                                                                  ")
 print(" • NOTA 2: Las líneas comentadas 24 y 35 sirven para calcular la inversa de la matriz.")
 print("         Como exede lo pedido por el TP ha quedado en desuso pero es funcional.   ")
-print("         ")
+print("         Se considera que el hecho de tener un determinante distinto a cero de la ")
+print("         matriz, ya comprueba que es posible hacer la inversion de la matriz.     ")
 print("                                                                                  ")
