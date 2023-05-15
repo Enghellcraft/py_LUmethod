@@ -1,8 +1,15 @@
+# TP Métodos Numéricos - 2023
+# Alumna: Denise Martin
+
+# Profesor: en las siguientes líneas estan comentadas todas las funciones con su explicación.
+#           Si presiona el "play", podrá ver en la terminal toda la teoría escrita y los ejemplos
+#           con la comprobación para cada caso que no puede realizarse o sí. 
 
 # Imports
 import numpy as np
 import scipy
 import scipy.linalg as linalg 
+from scipy.linalg import lu
 
 # Functions
 ## Square matrix
@@ -28,7 +35,6 @@ def my_inverse(A):
                 print("La matriz inversa es: \n", Ainv)
     
 ## Determinant of a square matrix
-
 def det_2x2(A): 
         diagonal_principal = A[0][0] * A[1][1] 
         diagonal_secundaria = A[0][1] * A[1][0] 
@@ -56,7 +62,6 @@ def my_determinant(A):
             return False
         else: return True
 
-
 ## Zero on diagonal
 def my_zero_on_diagonal(A):
     N = len(A)
@@ -66,18 +71,18 @@ def my_zero_on_diagonal(A):
             return False
     return True
  
+## One on matrix
+def my_ones_on_matrix(Z):
+    N = len(Z)
+    # Itera por todos los valores de la matriz verificando si alguno es uno
+    num_ones = np.sum(Z == 1)
+    return num_ones
+ 
 ## LU decomposition
 def my_lu_decomposition(A):
-    A = np.array(A)
-    n = A.shape[0]
-    L = np.eye(n)
-    U = np.zeros_like(A)
+    P, L, U = lu(A)
 
-    for i in range(n):
-        U[i, i:] = A[i, i:] - L[i, :i] @ U[:i, i:]
-        L[i + 1:, i] = (A[i + 1:, i] - L[i + 1:, :i] @ U[:i, i]) / U[i, i]
-
-    print(f"La matriz A es: \n {L @ U}")
+    print(f"La matriz A es: \n {A}")
     print(f"La matriz L es: \n {L}")
     print(f"La matriz U es: \n {U}")
    
@@ -100,8 +105,14 @@ def my_lu(A):
 ## Operations count
 def lu_decomposition_count(A):
     N = len(A)
-    op_count_L = N**2 - N
-    op_count_U = N**2
+    P, L, U = linalg.lu(A)
+    # Verifica los 1 en la matriz U
+    ones_on_U = my_ones_on_matrix(U)
+    # Verifica los 1 en la matriz L, escontando los de la diagonal que ya estan considerados
+    ones_on_L = my_ones_on_matrix(L) - len(L)
+
+    op_count_L = N**2 - N - ones_on_L
+    op_count_U = N**2 - ones_on_U
     op_count_A = op_count_L + op_count_U
         
     return op_count_A, op_count_L, op_count_U
@@ -128,9 +139,9 @@ doable_matrix = ([[1,2,3],
                  [2,3,1],
                  [-2,3,-2]])
 
-doable_matrix_2 = ([[1,1,1],
-                 [3,1,-3],
-                 [1,-2,-5]])
+doable_matrix_2 = ([[1,2,3],
+                 [4,5,6],
+                 [7,8,10]])
 
 doable_matrix_3 = ([[1,2],
                     [2,2]])
@@ -253,6 +264,13 @@ my_lu(doable_matrix)
 count_A, count_L, count_U = lu_decomposition_count(doable_matrix)
 print(f"    • y se calcula la cantidad de operaciones totales que llevo: {count_A}       ") 
 print(f"    • la cantidad de operaciones en L: {count_L}, y en U: {count_U}              ")
+print("    y1 * 1 = b1                          ---> 0 Operaciones                       ")
+print("    y1 * -1 + y2 * 1 = b2                ---> 2 Operaciones                       ")
+print("    y1 * 0.5 + y2 * 0.08 + y3 * 1 = b3   ---> 4 Operaciones                       ")
+print("    x1 * 2 + x2 * 3 + x3 * 1 = y1        ---> 4 Operaciones                       ")
+print("    x2 * 6 + x3 * -1 = y2                ---> 3 Operaciones                       ")
+print("    x3 * 2.5 = y3                        ---> 1 Operacion                         ")
+print("    Como A es una matriz inversible, entonces podría haber otra descomposicion LU ")
 print("                                                                                  ")
 print("    • Se emiten las matrices L y U de una matriz que cumple los requisitos:       ") 
 print_matrix(doable_matrix_2)
@@ -260,6 +278,13 @@ my_lu(doable_matrix_2)
 count_A, count_L, count_U = lu_decomposition_count(doable_matrix_2)
 print(f"    • y se calcula la cantidad de operaciones totales que llevo: {count_A}       ") 
 print(f"    • la cantidad de operaciones en L: {count_L}, y en U: {count_U}              ")
+print("    y1 * 1 = b1                          ---> 0 Operaciones                       ")
+print("    y1 * 0.1 + y2 * 1 = b2               ---> 2 Operaciones                       ")
+print("    y1 * 0.5 + y2 * 0.5 + y3 * 1 = b3    ---> 4 Operaciones                       ")
+print("    x1 * 7 + x2 * 8 + x3 * 10 = y1       ---> 5 Operaciones                       ")
+print("    x2 * 0.8 + x3 * 1.5 = y2             ---> 3 Operaciones                       ")
+print("    x3 * -0.5 = y3                       ---> 1 Operacion                         ")
+print("    Como A NO es una matriz inversible, entonces es la única descomposicion LU posible ")
 print("                                                                                  ")
 print("    • Se emiten las matrices L y U de una matriz que cumple los requisitos:       ") 
 print_matrix(doable_matrix_3)
@@ -267,6 +292,10 @@ my_lu(doable_matrix_3)
 count_A, count_L, count_U = lu_decomposition_count(doable_matrix_3)
 print(f"    • y se calcula la cantidad de operaciones totales que llevo: {count_A}       ") 
 print(f"    • la cantidad de operaciones en L: {count_L}, y en U: {count_U}              ")
+print("    y1 * 1 = b1                          ---> 0 Operaciones                       ")
+print("    y1 * 0.5 + y2 * 1 = b2               ---> 2 Operaciones                       ")
+print("    x1 * 2 + x2 * 2 = y1                 ---> 3 Operaciones                       ")
+print("    x2 * 1 = y2                          ---> 0 Operaciones                         ")
 
 ## III) Conclusions
 print("                                                                                  ")
@@ -282,5 +311,21 @@ print(" • Es un método inestable ya que si alguno o varios elementos de la di
 print("   son cero, se debe premultiplicar la matriz por alguna elemental de permutación, ") 
 print("   para poder aplicar la factorización.                                           ") 
 print("                                                                                  ")
-print(" • Se utiliza principalmente por su facilidad en resolucionde matrices triangulares ")
+print(" • Es un método no tan utilizado ya que requiere matrices n*n que no son siempre  ")
+print("   frecuentes.                                                                     ") 
+print("                                                                                  ")
+print(" • Se utiliza principalmente por su facilidad en resolucionde matrices triangulares.")
+print("                                                                                  ")
+print(" • Aqui se muetra la varificación de requisitos necesarios para realuzar LU, previo ")
+print("   a la resución de la misma. Si pasa todas las verificaciones, se imprime las    ")
+print("   matrices para ver las posibilidades de operaciones. En este caso pasa por un método")
+print("   genérico, que se describió en la teoría, pero hay que considerar que en caso de")
+print("   aparecer unos en la matriz U, deben descontarse operaciones: para ello se uso una")
+print("   funcion para contabilizar los unos en la matriz U y descontar así esas operaciones.")
+print("   Lo mismo podría haberse utilizado para la matriz L, pero en estos ejemplos no   ")
+print("   aparece el caso.                                                                ")
+print("                                                                                  ")
+print(" • NOTA: Las líneas comentadas 96 y 98 sirven para calcular la solución de un sistema,")
+print("         es decir que si se agrega un b para el sistema lineal Ax = b, se resuelve el caso.")
+print("         Como exede lo pedido por el TP ha quedado comentado pero es funcional   .")
 print("                                                                                  ")
