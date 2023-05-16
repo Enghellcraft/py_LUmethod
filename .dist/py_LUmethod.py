@@ -1,9 +1,9 @@
 # TP Métodos Numéricos - 2023
 # Alumna: Denise Martin
 
-# Profesor: en las siguientes líneas estan comentadas todas las funciones con su explicación.
+# Profesores: en las siguientes líneas estan comentadas todas las funciones con su explicación.
 #           Si presiona el "play", podrá ver en la terminal toda la teoría escrita y los ejemplos
-#           con la comprobación para cada caso que no puede realizarse o sí. 
+#           con la comprobación para cada caso: los que no pueden realizarse y los que sí. 
 
 # Imports
 import numpy as np
@@ -28,6 +28,7 @@ def my_inverse(A):
     if my_square_matrix(A) == True :
             # Si es cuadrada verifica si se puede invertir
             Aa = np.array(A)
+            # Se verifica su inversibilidad por determinante
             if np.linalg.det(Am) == 0:
                 return print("No es inversible")
             else:
@@ -36,16 +37,19 @@ def my_inverse(A):
     
 ## Determinant of a square matrix
 def det_2x2(A): 
+        # Calcula el determinante manualmente
         diagonal_principal = A[0][0] * A[1][1] 
         diagonal_secundaria = A[0][1] * A[1][0] 
         return diagonal_principal - diagonal_secundaria 
  
 def my_determinant(A): 
     N = len(A)
+    # Verifica si la matriz que ingresa es 2*2
     if N == 2:
         det_2x2(A)
     else:     
         determinants = [] 
+        # Determina las submatrices y calcula su determinante en la anterior funcion
         for i in range(N): 
             for j in range(N): 
                 submatrix = [] 
@@ -58,6 +62,7 @@ def my_determinant(A):
                         submatrix.append(fila) 
                 determinant = det_2x2(submatrix) 
                 determinants.append(determinant) 
+        # Acumula todos los determinantes de submatrices y verifica si alguno es cero
         if determinants.__contains__(0):
             return False
         else: return True
@@ -80,14 +85,16 @@ def my_ones_on_matrix(Z):
  
 ## LU decomposition
 def my_lu_decomposition(A):
+    # Utilizando la biblioteca, se obtienen la matriz de permutacion, lower y upper
     P, L, U = lu(A)
-
+    A = np.array(A)
     print(f"La matriz A es: \n {A}")
     print(f"La matriz L es: \n {L}")
     print(f"La matriz U es: \n {U}")
    
 ## LU method
 def my_lu(A):
+    # Verifica todos los casos teoricos donde no podria realizarse LU o donde no esta asegurada su convergencia
     if my_zero_on_diagonal(A) == False:
         return print("Algun Elemento en la diagonal es 0 y no puede resolverse por LU")
     else:
@@ -111,6 +118,7 @@ def lu_decomposition_count(A):
     # Verifica los 1 en la matriz L, escontando los de la diagonal que ya estan considerados
     ones_on_L = my_ones_on_matrix(L) - len(L)
 
+    # los 1 verificados en ambas matrices se descuentan del total ya que se desprecian como operaciones elementales
     op_count_L = N**2 - N - ones_on_L
     op_count_U = N**2 - ones_on_U
     op_count_A = op_count_L + op_count_U
@@ -133,7 +141,7 @@ non_square_matrix = ([[1,2,3],
 
 zero_determinant_matrix = ([[3,1,4],
                            [-1,2,1],
-                           [3,2,1]])
+                           [3,2,4]])
 
 doable_matrix = ([[1,2,3],
                  [2,3,1],
@@ -247,8 +255,6 @@ print("*************************************************************************
 print("    • Se comprueba si la matriz tiene algun cero en su diagonal:                 ")
 print_matrix(matrix_zero_in_diag)
 my_lu(matrix_zero_in_diag)
-print_matrix([[2,1], [2,1]])
-print("    es la submatriz que tiene determinante cero: 2*1 - 2*1 = 0                    ")
 print("                                                                                  ")
 print("    • Se comprueba si la matriz es cuadrada:                                      ")
 print_matrix(non_square_matrix)
@@ -303,10 +309,10 @@ print("                                                                         
 print("**********************************************************************************")
 print("*                                  CONCLUSIONES                                  *")
 print("**********************************************************************************")
-print(" • El Método de descomposición LU, también es es un método semi-numérico, que no ")
-print("   tiene criterio de convergencia y no requiere aproximación inicial, sin embargo es") 
-print("   aplicable cuando las matrices se pueden resolver por el método de Gauss sin    ")
-print("   intercambio de renglones.                                                      ")
+print(" • El Método de descomposición LU, también es es un método semi-numérico, cuyo    ")
+print("   criterio de convergencia no es del todo limpio. Como ventaja no requiere       ") 
+print("   aproximación inicial, sin embargo continúa siendo un método donde se resuelven ")
+print("   dos sistemas lineales.                                                         ")
 print("                                                                                  ")
 print(" • Es un método inestable ya que si alguno o varios elementos de la diagonal principal ")
 print("   son cero, se debe premultiplicar la matriz por alguna elemental de permutación, ") 
@@ -322,16 +328,17 @@ print("   a la resución de la misma. Si pasa todas las verificaciones, se impri
 print("   matrices para ver las posibilidades de operaciones. En este caso pasa por un método")
 print("   genérico, que se describió en la teoría, pero hay que considerar que en caso de")
 print("   aparecer unos en la matriz U, deben descontarse operaciones: para ello se uso una")
-print("   funcion para contabilizar los unos en la matriz U y descontar así esas operaciones.")
-print("   Lo mismo podría haberse utilizado para la matriz L, pero en estos ejemplos no   ")
-print("   aparece el caso.                                                                ")
+print("   funcion para contabilizar los unos en la matriz U  y en la matriz L, por separado")
+print("   y descontar así esas operaciones despreciadas.                                  ")
 print("                                                                                  ")
 print(" • NOTA 1: Las líneas comentadas 96 y 98 sirven para calcular la solución de un sistema,")
-print("         es decir que si se agrega un b para el sistema lineal Ax = b, se resuelve el caso.")
-print("         Como exede lo pedido por el TP ha quedado comentado pero es funcional   .")
+print("         es decir que si se agrega un b como parámetro ingresante a la fución, para")
+print("         el sistema lineal Ax = b, se resuelve el caso.                           ")
+print("         Como exede lo pedido por el TP ha quedado comentado pero es funcional.   ")
 print("                                                                                  ")
 print(" • NOTA 2: Las líneas comentadas 24 y 35 sirven para calcular la inversa de la matriz.")
 print("         Como exede lo pedido por el TP ha quedado en desuso pero es funcional.   ")
 print("         Se considera que el hecho de tener un determinante distinto a cero de la ")
 print("         matriz, ya comprueba que es posible hacer la inversion de la matriz.     ")
+print("         Es funcional en caso de querer imprimir la inversa de la matriz en cuestión.")
 print("                                                                                  ")
