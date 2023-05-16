@@ -143,6 +143,10 @@ zero_determinant_matrix = ([[3,1,4],
                            [-1,2,1],
                            [3,2,4]])
 
+zero_determinant_submatrix = ([[1,2,3],
+                               [4,8,2],
+                               [2,2,3]])   
+
 doable_matrix = ([[1,2,3],
                  [2,3,1],
                  [-2,3,-2]])
@@ -260,9 +264,15 @@ print("    • Se comprueba si la matriz es cuadrada:                           
 print_matrix(non_square_matrix)
 my_lu(non_square_matrix)
 print("                                                                                  ")
-print("    • Se comprueba si la matriz tiene determinante = 0: (en matriz y submatrices) ")
+print("    • Se comprueba si la matriz tiene determinante = 0: (en matriz hay det(0) ) ")
 print_matrix(zero_determinant_matrix)
 my_lu(zero_determinant_matrix)
+print("                                                                                  ")
+print("    • Se comprueba si la matriz tiene determinante = 0: (en submatriz hay det(0) )")
+print_matrix(zero_determinant_submatrix)
+print("      Verifica la submatriz:                                                      ")
+print_matrix([row[0:2] for row in zero_determinant_submatrix[0:2]])
+my_lu(zero_determinant_submatrix)
 print("                                                                                  ")
 print("    • Se emiten las matrices L y U de una matriz que cumple los requisitos:       ") 
 print_matrix(doable_matrix)
