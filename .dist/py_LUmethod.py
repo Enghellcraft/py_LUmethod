@@ -4,12 +4,13 @@
 # Profesores: en las siguientes líneas estan comentadas todas las funciones con su explicación.
 #           Si presiona el "play", podrá ver en la terminal toda la teoría escrita y los ejemplos
 #           con la comprobación para cada caso: los que no pueden realizarse y los que sí. 
+#           Para correr el programa es necesario tener instalado scipy y matplotlib. 
 
 # Imports
 import numpy as np
-import scipy
 import scipy.linalg as linalg 
 from scipy.linalg import lu
+import matplotlib.pyplot as plt
 
 # Functions
 ## Square matrix
@@ -106,6 +107,9 @@ def my_lu(A, B):
             else:
                 LU = linalg.lu_factor(A)         
                 x = linalg.lu_solve(LU, B) 
+                
+                print_matrix_graphics(x)
+                
                 my_lu_decomposition(A)
                 print(f"Para b = {B}")
                 print("La solucion es:\n",x )
@@ -131,6 +135,16 @@ def print_matrix(A):
     a = np.array(A)
     for line in a:
         print ('  '.join(map(str, line)))
+
+## Print matrix graphics
+def print_matrix_graphics(x):
+    plt.plot(x)
+    plt.gca().set_facecolor('#e9edc9')
+    plt.xlabel('Índice')
+    plt.ylabel('Solución')
+    plt.title('Solución del Sistema Linear usando Método LU')
+    plt.show()  
+      
 
 # Dataset
 matrix_zero_in_diag =  ([[1,2,3],
